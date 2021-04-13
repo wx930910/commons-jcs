@@ -1,5 +1,10 @@
 package org.apache.commons.jcs.utils.discovery;
 
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,36 +26,22 @@ package org.apache.commons.jcs.utils.discovery;
 
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /** Mock listener, for testing. */
-public class MockDiscoveryListener
-    implements IDiscoveryListener
-{
-    /** discovered services. */
-    public List<DiscoveredService> discoveredServices = new ArrayList<>();
-
-    /**
-     * Adds the entry to a list. I'm not using a set. I want to see if we get dupes.
-     * <p>
-     * @param service
-     */
-    @Override
-    public void addDiscoveredService( DiscoveredService service )
-    {
-        discoveredServices.add( service );
-    }
-
-    /**
-     * Removes it from the list.
-     * <p>
-     * @param service
-     */
-    @Override
-    public void removeDiscoveredService( DiscoveredService service )
-    {
-        discoveredServices.remove( service );
-    }
+public class MockDiscoveryListener {
+	public static IDiscoveryListener mockIDiscoveryListener1() {
+		List<DiscoveredService> mockFieldVariableDiscoveredServices = new ArrayList<>();
+		IDiscoveryListener mockInstance = mock(IDiscoveryListener.class);
+		doAnswer((stubInvo) -> {
+			DiscoveredService service = stubInvo.getArgument(0);
+			mockFieldVariableDiscoveredServices.add(service);
+			return null;
+		}).when(mockInstance).addDiscoveredService(any());
+		doAnswer((stubInvo) -> {
+			DiscoveredService service = stubInvo.getArgument(0);
+			mockFieldVariableDiscoveredServices.remove(service);
+			return null;
+		}).when(mockInstance).removeDiscoveredService(any());
+		return mockInstance;
+	}
 
 }
